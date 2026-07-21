@@ -553,6 +553,7 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* ═══ CONFIG — fill in after Supabase setup ═══ */
 let SUPABASE_URL      = "YOUR_SUPABASE_URL";       // e.g. https://abcd1234.supabase.co
@@ -892,17 +893,18 @@ $("sendBtn").addEventListener("click", async ()=>{
   const configured = SUPABASE_URL.startsWith("https://") && !SUPABASE_ANON_KEY.startsWith("YOUR_");
   if(configured){
     try{
-      await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}`, {
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json",
-          "apikey":SUPABASE_ANON_KEY,
-          "Authorization":`Bearer ${SUPABASE_ANON_KEY}`,
-          "Prefer":"return=minimal"
-        },
-        body:JSON.stringify(payload)
-      });
-    }catch(e){ /* she never sees an error */ }
+      const { createClient } = supabase;
+      const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const { error } = await supabaseClient
+        .from(TABLE)
+        .insert([payload]);
+      
+      if (error) {
+        console.error("Supabase Insertion Error:", error);
+      }
+    }catch(e){ 
+      console.error("Connection Error:", e);
+    }
   }
   go(ORDER.indexOf("s-done"));
 });
