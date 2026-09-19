@@ -100,8 +100,44 @@ export function setScreenIndex(index) {
 }
 
 /**
- * Get current answers
+ * Get current answers, guaranteed to merge complete screen structure & defaults
  */
 export function getAnswers() {
-  return { ...state.answers };
+  const current = state.answers || {};
+  return {
+    suitcase: { dressColor: "", packItems: [], snacks: [], userQuestions: "", ...(current.suitcase || {}) },
+    cooler: { items: [], barOrder: "", ...(current.cooler || {}) },
+    vibe: { choices: [], other: "", ...(current.vibe || {}) },
+    activities: { liked: [], maybe: [], passed: [], lastFilter: "all", ...(current.activities || {}) },
+    food: {
+      fridayDinner: null,
+      fridayBackup: null,
+      cravings: "",
+      satLunch: null,
+      satLunchBackup: null,
+      groupDinner: "Tujague's @ 7:00 PM (Brotherhood & dates)",
+      sundayBeignets: true,
+      ...(current.food || {})
+    },
+    saturdayNight: { plans: [], otherPlans: "", howLate: "Midnight", company: "Stay with the group", ...(current.saturdayNight || {}) },
+    notes: { text: "", wantsSurprise: true, ...(current.notes || {}) }
+  };
+}
+
+/**
+ * Reset all answers, screen progress, and storage keys for a fresh run
+ */
+export function resetAnswers() {
+  state.currentScreenIndex = 0;
+  state.completedScreens = new Set();
+  state.answers = {};
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem("nola-weekend-session");
+    localStorage.removeItem("nola-weekend-submits");
+    localStorage.removeItem("nola-weekend-pending");
+  } catch (e) {
+    console.warn("Failed to clear localStorage keys:", e);
+  }
+  notify('navigation');
 }
