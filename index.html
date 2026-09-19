@@ -228,9 +228,6 @@
       } else {
         footerPrimaryBtn.textContent = "Next";
       }
-
-      // Scroll card body back to top on screen change
-      if (cardBody) cardBody.scrollTop = 0;
     }
 
     // Handle Screen Swapping
@@ -277,6 +274,8 @@
       }
 
       updateHeaderChrome();
+      // Scroll card body back to top only on screen transition
+      if (cardBody) cardBody.scrollTop = 0;
     }
 
     // Event Listeners for Header & Footer Nav Buttons
