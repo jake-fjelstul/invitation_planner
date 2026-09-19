@@ -33,7 +33,7 @@ export const CONFIG = {
   groupSize: 2,
 
   // Supabase Integration (Stub configuration)
-  supabaseUrl: "",
-  supabaseAnonKey: "",
+  supabaseUrl: "https://lzbpfirlhodcwqfwcpnz.supabase.co",
+  supabaseAnonKey: "sb_publishable_NTNz1y0nPNCL-6BFoPfu4g_jtfhNXCn",
   tableName: "nola_invitation_responses"
 };

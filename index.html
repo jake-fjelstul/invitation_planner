@@ -19,7 +19,7 @@
   <link rel="preload" as="image" href="assets/1.jpeg">
 
   <!-- Main Stylesheet -->
-  <link rel="stylesheet" href="css/style.css?v=23">
+  <link rel="stylesheet" href="css/style.css?v=24">
   
   <!-- Supabase CDN (dormant until final prompt) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -87,20 +87,20 @@
 
   <!-- Application Logic Modules -->
   <script type="module">
-    import { SCREENS } from './js/data.js?v=23';
-    import { state, loadAnswers, subscribe, setScreenIndex, markScreenCompleted, getAnswers } from './js/state.js?v=23';
-    import { init as initCover } from './js/screens/cover.js?v=23';
-    import { init as initPlan } from './js/screens/plan.js?v=23';
-    import { init as initSuitcase } from './js/screens/suitcase.js?v=23';
-    import { init as initCooler } from './js/screens/cooler.js?v=23';
-    import { init as initVibe } from './js/screens/vibe.js?v=23';
-    import { init as initPlaylist } from './js/screens/playlist.js?v=23';
-    import { init as initPostcards } from './js/screens/postcards.js?v=23';
-    import { init as initMenu } from './js/screens/menu.js?v=23';
-    import { init as initSaturdayNight } from './js/screens/saturdayNight.js?v=23';
-    import { init as initNotes } from './js/screens/notes.js?v=23';
-    import { init as initConfirmation } from './js/screens/confirmation.js?v=23';
-    import { initSupabase, saveInvitationResponse } from './js/supabase.js?v=23';
+    import { SCREENS } from './js/data.js?v=25';
+    import { state, loadAnswers, subscribe, setScreenIndex, markScreenCompleted, getAnswers } from './js/state.js?v=25';
+    import { init as initCover } from './js/screens/cover.js?v=25';
+    import { init as initPlan } from './js/screens/plan.js?v=25';
+    import { init as initSuitcase } from './js/screens/suitcase.js?v=25';
+    import { init as initCooler } from './js/screens/cooler.js?v=25';
+    import { init as initVibe } from './js/screens/vibe.js?v=25';
+    import { init as initPlaylist } from './js/screens/playlist.js?v=25';
+    import { init as initPostcards } from './js/screens/postcards.js?v=25';
+    import { init as initMenu } from './js/screens/menu.js?v=25';
+    import { init as initSaturdayNight } from './js/screens/saturdayNight.js?v=25';
+    import { init as initNotes } from './js/screens/notes.js?v=25';
+    import { init as initConfirmation } from './js/screens/confirmation.js?v=25';
+    import { flushPending, saveInvitationResponse, renderAnswersDebug } from './js/supabase.js?v=25';
 
     // Expose setScreenIndex to window for helper testing
     window.setScreenIndex = setScreenIndex;
@@ -127,6 +127,55 @@
     const screenConfirmationEl = document.getElementById('screen-confirmation');
 
     let lastRenderedIndex = -1;
+
+    // Debug View (#answers) Handler
+    function checkDebugView() {
+      if (window.location.hash === '#answers') {
+        const appCard = document.getElementById('app-card');
+        if (appCard) appCard.style.display = 'none';
+
+        let debugEl = document.getElementById('debug-view');
+        if (!debugEl) {
+          debugEl = document.createElement('pre');
+          debugEl.id = 'debug-view';
+          debugEl.style.fontFamily = 'monospace';
+          debugEl.style.fontSize = '13px';
+          debugEl.style.padding = '16px';
+          debugEl.style.margin = '0';
+          debugEl.style.whiteSpace = 'pre-wrap';
+          debugEl.style.wordBreak = 'break-word';
+          debugEl.style.overflow = 'auto';
+          debugEl.style.height = '100vh';
+          debugEl.style.width = '100vw';
+          debugEl.style.boxSizing = 'border-box';
+          debugEl.style.backgroundColor = '#1e1e1e';
+          debugEl.style.color = '#f0f0f0';
+          debugEl.style.position = 'fixed';
+          debugEl.style.top = '0';
+          debugEl.style.left = '0';
+          debugEl.style.zIndex = '9999';
+          document.body.appendChild(debugEl);
+        } else {
+          debugEl.style.display = 'block';
+        }
+        renderAnswersDebug(debugEl);
+        return true;
+      } else {
+        const debugEl = document.getElementById('debug-view');
+        if (debugEl) debugEl.style.display = 'none';
+        const appCard = document.getElementById('app-card');
+        if (appCard) appCard.style.display = '';
+        return false;
+      }
+    }
+
+    window.addEventListener('hashchange', () => {
+      if (window.location.hash === '#answers') {
+        checkDebugView();
+      } else {
+        window.location.reload();
+      }
+    });
 
     // Update Header Progress & Chrome
     function updateHeaderChrome() {
@@ -244,7 +293,7 @@
       }
       if (state.currentScreenIndex === 9) {
         try {
-          await saveInvitationResponse(getAnswers());
+          await saveInvitationResponse(getAnswers(), { screenProgress: state.currentScreenIndex });
         } catch (err) {
           console.warn('Supabase save error:', err);
         }
@@ -263,9 +312,14 @@
         img.src = `assets/${i}.jpeg`;
       }
 
-      initSupabase();
       loadAnswers();
+      if (checkDebugView()) {
+        flushPending().catch(() => {});
+        return;
+      }
+
       renderScreen();
+      flushPending().catch(() => {});
 
       subscribe((currState, changeType) => {
         if (changeType === 'navigation' || state.currentScreenIndex !== lastRenderedIndex) {
