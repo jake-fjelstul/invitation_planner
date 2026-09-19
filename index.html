@@ -19,7 +19,7 @@
   <link rel="preload" as="image" href="assets/1.jpeg">
 
   <!-- Main Stylesheet -->
-  <link rel="stylesheet" href="css/style.css?v=24">
+  <link rel="stylesheet" href="css/style.css">
   
   <!-- Supabase CDN (dormant until final prompt) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -87,20 +87,20 @@
 
   <!-- Application Logic Modules -->
   <script type="module">
-    import { SCREENS } from './js/data.js?v=28';
-    import { state, loadAnswers, subscribe, setScreenIndex, markScreenCompleted, getAnswers, resetAnswers } from './js/state.js?v=28';
-    import { init as initCover } from './js/screens/cover.js?v=28';
-    import { init as initPlan } from './js/screens/plan.js?v=28';
-    import { init as initSuitcase } from './js/screens/suitcase.js?v=28';
-    import { init as initCooler } from './js/screens/cooler.js?v=28';
-    import { init as initVibe } from './js/screens/vibe.js?v=28';
-    import { init as initPlaylist } from './js/screens/playlist.js?v=28';
-    import { init as initPostcards } from './js/screens/postcards.js?v=28';
-    import { init as initMenu } from './js/screens/menu.js?v=28';
-    import { init as initSaturdayNight } from './js/screens/saturdayNight.js?v=28';
-    import { init as initNotes } from './js/screens/notes.js?v=28';
-    import { init as initConfirmation } from './js/screens/confirmation.js?v=28';
-    import { flushPending, saveInvitationResponse, renderAnswersDebug } from './js/supabase.js?v=28';
+    import { SCREENS } from './js/data.js';
+    import { state, loadAnswers, subscribe, setScreenIndex, markScreenCompleted, getAnswers, resetAnswers } from './js/state.js';
+    import { init as initCover } from './js/screens/cover.js';
+    import { init as initPlan } from './js/screens/plan.js';
+    import { init as initSuitcase } from './js/screens/suitcase.js';
+    import { init as initCooler } from './js/screens/cooler.js';
+    import { init as initVibe } from './js/screens/vibe.js';
+    import { init as initPlaylist } from './js/screens/playlist.js';
+    import { init as initPostcards } from './js/screens/postcards.js';
+    import { init as initMenu } from './js/screens/menu.js';
+    import { init as initSaturdayNight } from './js/screens/saturdayNight.js';
+    import { init as initNotes } from './js/screens/notes.js';
+    import { init as initConfirmation } from './js/screens/confirmation.js';
+    import { flushPending, saveInvitationResponse, renderAnswersDebug } from './js/supabase.js';
 
     // Expose setScreenIndex to window for helper testing
     window.setScreenIndex = setScreenIndex;

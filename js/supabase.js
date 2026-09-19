@@ -191,12 +191,70 @@ export async function flushPending() {
   } catch { /* ignore */ }
 }
 
+/* ─── state reconciliation ──────────────────────────────────────── */
+
+const STATE_KEY = 'nola-weekend-v1';
+const SCREEN_KEYS = ['suitcase','cooler','vibe','activities','food','saturdayNight','notes'];
+
+function readPersisted() {
+  try {
+    const raw = localStorage.getItem(STATE_KEY);
+    if (!raw) return { answers: {}, screenProgress: null };
+    const parsed = JSON.parse(raw);
+    return {
+      answers: parsed.answers && typeof parsed.answers === 'object' ? parsed.answers : {},
+      screenProgress: Number.isFinite(parsed.currentScreenIndex) ? parsed.currentScreenIndex : null
+    };
+  } catch {
+    return { answers: {}, screenProgress: null };
+  }
+}
+
+function hasContent(v) {
+  if (v == null) return false;
+  if (Array.isArray(v)) return v.length > 0;
+  if (typeof v === 'string') return v.trim().length > 0;
+  if (typeof v === 'object') return Object.values(v).some(hasContent);
+  return true;                       // numbers and booleans count
+}
+
+/** Per screen, keep whichever copy actually has something in it. */
+function reconcile(memory = {}, persisted = {}) {
+  const out = {};
+  for (const key of SCREEN_KEYS) {
+    const m = memory?.[key];
+    const p = persisted?.[key];
+    out[key] = hasContent(m) ? m : (hasContent(p) ? p : (m ?? p));
+    if (out[key] === undefined) delete out[key];
+  }
+  return out;
+}
+
 /* ─── submit ────────────────────────────────────────────────────── */
 
 export async function saveInvitationResponse(answers, meta = {}) {
-  const row = buildRow(answers, { ...meta, submitCount: bumpSubmitCount() });
-  const client = getClient();
+  const persisted = readPersisted();
+  const merged = reconcile(answers, persisted.answers);
 
+  const filledScreens = SCREEN_KEYS.filter(k => hasContent(merged[k]));
+  console.log('[supabase] submitting screens with content:', filledScreens);
+
+  if (filledScreens.length === 0) {
+    // Nothing anywhere. Record it rather than silently writing a blank row.
+    console.error('[supabase] ABORTED: both in-memory and stored answers are empty.', {
+      memoryKeys: Object.keys(answers || {}),
+      storedKeys: Object.keys(persisted.answers || {})
+    });
+    return { success: false, error: 'empty-answers' };
+  }
+
+  const row = buildRow(merged, {
+    ...meta,
+    screenProgress: meta.screenProgress ?? persisted.screenProgress,
+    submitCount: bumpSubmitCount()
+  });
+
+  const client = getClient();
   if (!client) {
     console.log('[supabase] dormant — keys not set. Payload would have been:', row);
     return { success: true, dormant: true };
@@ -216,7 +274,6 @@ export async function saveInvitationResponse(answers, meta = {}) {
     }
 
     console.log('[supabase] saved, row id:', data?.id);
-    try { localStorage.removeItem(PENDING_KEY); } catch { /* ignore */ }
     return { success: true, id: data?.id };
   } catch (err) {
     console.warn('[supabase] network error, queued for retry:', err);
