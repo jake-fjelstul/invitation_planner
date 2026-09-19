@@ -153,6 +153,8 @@ export function init(el) {
     companyGrid.appendChild(companyChip);
   });
 
+  saveSatState();
+
   paperCard.appendChild(body);
   containerEl.appendChild(paperCard);
 }

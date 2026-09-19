@@ -207,6 +207,7 @@ export async function saveInvitationResponse(answers, meta = {}) {
     }
 
     console.log('[supabase] saved, row id:', data?.id);
+    try { localStorage.removeItem(PENDING_KEY); } catch { /* ignore */ }
     return { success: true, id: data?.id };
   } catch (err) {
     console.warn('[supabase] network error, queued for retry:', err);

@@ -83,6 +83,8 @@ export function init(el) {
     surpriseGroup.appendChild(chipBtn);
   });
 
+  saveNotesState();
+
   paperCard.appendChild(body);
   containerEl.appendChild(paperCard);
 }

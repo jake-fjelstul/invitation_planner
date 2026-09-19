@@ -628,6 +628,7 @@ export async function init(el) {
     deckWrapper.appendChild(summaryCard);
   }
 
+  saveState();
   renderFilterBar();
   renderDeckView();
 }

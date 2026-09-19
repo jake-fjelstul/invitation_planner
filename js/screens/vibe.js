@@ -88,6 +88,8 @@ export function init(el) {
     saveVibeState();
   });
 
+  saveVibeState();
+
   paperCard.appendChild(body);
   containerEl.appendChild(paperCard);
 }

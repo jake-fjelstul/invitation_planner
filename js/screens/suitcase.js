@@ -167,6 +167,8 @@ export function init(el) {
     saveSuitcaseState();
   });
 
+  saveSuitcaseState();
+
   paperCard.appendChild(body);
   containerEl.appendChild(paperCard);
 }

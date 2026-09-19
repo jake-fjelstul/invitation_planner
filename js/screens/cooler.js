@@ -86,6 +86,8 @@ export function init(el) {
     saveCoolerState();
   });
 
+  saveCoolerState();
+
   paperCard.appendChild(body);
   containerEl.appendChild(paperCard);
 }
