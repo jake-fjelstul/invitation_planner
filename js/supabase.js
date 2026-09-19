@@ -87,13 +87,22 @@ const num = v => (Number.isFinite(v) ? v : null);
  * so everything here is optional-chained and defaulted.
  */
 export function buildRow(answers = {}, meta = {}) {
-  const suitcase = answers.suitcase || {};
-  const cooler = answers.cooler || {};
-  const vibe = answers.vibe || {};
-  const acts = answers.activities || {};
-  const food = answers.food || {};
-  const night = answers.saturdayNight || {};
-  const notes = answers.notes || {};
+  const suitcase = { dressColor: "", packItems: [], snacks: [], userQuestions: "", ...(answers.suitcase || {}) };
+  const cooler = { items: [], barOrder: "", ...(answers.cooler || {}) };
+  const vibe = { choices: [], other: "", ...(answers.vibe || {}) };
+  const acts = { liked: [], maybe: [], passed: [], lastFilter: 'all', ...(answers.activities || {}) };
+  const food = {
+    fridayDinner: null,
+    fridayBackup: null,
+    cravings: "",
+    satLunch: null,
+    satLunchBackup: null,
+    groupDinner: "Tujague's @ 7:00 PM (Brotherhood & dates)",
+    sundayBeignets: true,
+    ...(answers.food || {})
+  };
+  const night = { plans: [], otherPlans: "", howLate: "Midnight", company: "Stay with the group", ...(answers.saturdayNight || {}) };
+  const notes = { text: "", wantsSurprise: true, ...(answers.notes || {}) };
 
   return {
     guest_name: text(CONFIG.guestName),
