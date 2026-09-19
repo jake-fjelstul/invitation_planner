@@ -1,913 +1,278 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Invitation</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23C5A059'><path d='M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z'/></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Fraunces:ital,opsz,wght@0,9..144,420;0,9..144,520;1,9..144,420&family=Karla:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#1A1513; /* Elegant deep charcoal/mahogany background */
-    --card:#FCFAF7; /* Soft warm ivory paper */
-    --ink:#2C2523; /* Deep warm slate/charcoal text */
-    --muted:#786F6B; /* Warm grey/brown for subtext */
-    --line:rgba(197, 160, 89, 0.25); /* Gold outline tone */
-    --rose:#9E5D67; /* Dusty rose */
-    --rose-soft:#F6ECEB;
-    --rose-line:#DFBFC3;
-    --gold:#C5A059; /* Rich gold accent */
-    --gold-bright:#E5C180;
-    --border-inner:rgba(197, 160, 89, 0.35);
-  }
-  *{ margin:0; padding:0; box-sizing:border-box; }
-  html,body{ height:100%; }
-  body{
-    background:var(--bg);
-    color:var(--ink);
-    font-family:'Karla',sans-serif;
-    font-size:16px; line-height:1.6;
-    overflow-x:hidden;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Two Lanes to New Orleans — A Road Trip Invitation</title>
+  <meta name="description" content="A vintage road atlas invitation for a weekend road trip from Atlanta to New Orleans.">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 
-  /* ambient glow behind the card (shifts with the vibe dial) */
-  #glow{
-    position:fixed; inset:0; z-index:-1;
-    background:
-      radial-gradient(70% 55% at 50% 15%, var(--glow-c, rgba(168,98,108,0.12)) 0%, transparent 80%),
-      linear-gradient(180deg,#241E1C 0%, var(--bg) 80%);
-    transition:--glow-c 1.2s ease, background 1.2s ease;
-  }
-
-  .shell{
-    min-height:100vh; min-height:100dvh;
-    display:flex; align-items:center; justify-content:center;
-    padding:24px 16px;
-  }
-  .card{
-    width:100%; max-width:460px;
-    background:var(--card);
-    background-image: radial-gradient(rgba(0,0,0,0.015) 1px, transparent 0), radial-gradient(rgba(0,0,0,0.015) 1px, transparent 0);
-    background-size: 8px 8px;
-    background-position: 0 0, 4px 4px; /* subtle tactile paper tooth */
-    border:1px solid rgba(197, 160, 89, 0.2);
-    border-radius:16px;
-    box-shadow: 
-      0 30px 60px rgba(0,0,0,0.45), 
-      0 2px 10px rgba(0,0,0,0.15),
-      inset 0 0 30px rgba(255,255,255,0.75); /* letterpress edge highlight */
-    padding:44px 36px 42px;
-    position:relative;
-    overflow:visible;
-  }
-  .card::before {
-    content: '';
-    position: absolute;
-    inset: 12px;
-    border: 1px solid var(--border-inner);
-    border-radius: 10px;
-    pointer-events: none;
-  }
-  @media (max-width:420px){ 
-    .card{ padding:36px 26px 34px; }
-    .card::before { inset: 8px; border-radius: 8px; }
-  }
-
-  /* top bar: back + progress */
-  .topbar{
-    display:flex; align-items:center; justify-content:space-between;
-    min-height:28px; margin-bottom:14px;
-    position: relative;
-    z-index: 10;
-  }
-  .back{
-    background:none; border:none; cursor:pointer;
-    color:var(--muted); font-size:20px; line-height:1;
-    padding:4px 8px; margin-left:-8px; border-radius:8px;
-    visibility:hidden;
-    transition: color .2s ease;
-  }
-  .back.show{ visibility:visible; }
-  .back:hover{ color:var(--ink); }
-  .back:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
-  .dots{ display:flex; gap:7px; }
-  .dots i{
-    width:5px; height:5px; border-radius:50%;
-    background:#D1C7C1; transition:background .3s ease, transform .3s ease;
-  }
-  .dots i.on{ background:var(--gold); transform:scale(1.3); }
-  .dots i.done{ background:var(--rose); }
-
-  /* type */
-  .kicker{
-    font-family:'Cinzel', serif;
-    font-size:11px; font-weight:600;
-    letter-spacing:.18em; text-transform:uppercase;
-    color:var(--rose);
-    text-align: center;
-  }
-  h1{
-    font-family:'Cormorant Garamond', serif; font-weight:400; font-style:italic;
-    font-size:clamp(34px,8vw,42px); line-height:1.15;
-    margin:8px 0 12px;
-    letter-spacing:-0.01em;
-    text-align: center;
-  }
-  h2{
-    font-family:'Cormorant Garamond', serif; font-weight:400; font-style:italic;
-    font-size:clamp(28px,7vw,34px); line-height:1.2;
-    margin:6px 0 8px;
-    letter-spacing:-0.01em;
-  }
-  .sub{ color:var(--muted); font-size:15px; max-width:38ch; }
-
-  /* screens */
-  .screen{ display:none; position: relative; z-index: 5; }
-  .screen.active{ display:block; animation:enter .45s ease both; }
-  @keyframes enter{
-    from{ opacity:0; transform:translateY(10px); }
-    to{ opacity:1; transform:none; }
-  }
-  @media (prefers-reduced-motion:reduce){
-    .screen.active{ animation:none; }
-    *{ transition-duration:.01ms !important; animation-duration:.01ms !important; }
-  }
-
-  /* buttons */
-  .btn{
-    display:inline-block;
-    background:var(--ink); color:#fff;
-    border:1px solid var(--gold); border-radius:2px; /* sharp luxury lines */
-    padding:11px 28px;
-    font-family:'Cinzel',serif; font-size:12px; font-weight:600;
-    letter-spacing:.12em; text-transform:uppercase;
-    cursor:pointer; transition:all .3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-  }
-  .btn:hover{ 
-    background: #FAF6F0; 
-    color: var(--ink);
-    border-color: var(--ink);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
-  }
-  .btn:focus-visible{ outline:1px solid var(--gold); outline-offset:3px; }
-  .btn[disabled]{ opacity:.45; cursor:default; }
-  .btn-row{ margin-top:30px; display:flex; align-items:center; gap:14px; }
-  .skip-link{
-    background:none; border:none; cursor:pointer;
-    color:var(--muted); font-size:13px; font-family:'Karla',sans-serif;
-    text-decoration:underline; text-underline-offset:3px;
-    transition: color .2s ease;
-  }
-  .skip-link:hover{ color:var(--ink); }
-
-  /* ── SCREEN 1: time range slider ─────────────────────── */
-  .timewrap{ margin-top:34px; }
-  .timelabels{
-    display:flex; justify-content:space-between;
-    font-family:'Cormorant Garamond',serif; font-size:23px; margin-bottom:22px;
-  }
-  .timelabels b{ font-weight:400; font-style:italic; }
-  .timelabels span{ display:block; font-family:'Karla',sans-serif; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin-bottom:2px; }
-  .track{
-    position:relative; height:8px; border-radius:999px;
-    background: linear-gradient(90deg, 
-      #E5C180 0%, 
-      #C5A059 50%, 
-      #8E6C2F 100%); /* Gold gradient ribbon */
-    touch-action:none;
-    cursor:pointer;
-  }
-  .window{
-    position:absolute; top:-4px; bottom:-4px;
-    border:1px solid var(--ink);
-    background:rgba(255,255,255,0.15);
-    backdrop-filter:blur(1px);
-    border-radius:999px;
-    pointer-events:none;
-  }
-  .handle{
-    position:absolute; top:50%;
-    width:22px; height:22px; border-radius:50%;
-    background:#fff; border:1.5px solid var(--gold);
-    transform:translate(-50%,-50%);
-    cursor:grab; touch-action:none;
-    transition:box-shadow .15s ease, transform .15s ease;
-    box-shadow:0 3px 8px rgba(0,0,0,0.12);
-  }
-  .handle:hover{ transform:translate(-50%,-50%) scale(1.15); }
-  .handle:active{ cursor:grabbing; box-shadow:0 0 0 6px rgba(197,160,89,.18); }
-  .handle:focus-visible{ outline:none; box-shadow:0 0 0 4px rgba(197,160,89,.35); }
-  .orb{
-    position:absolute; top:-30px;
-    width:22px; height:22px; border-radius:50%;
-    transform:translateX(-50%);
-    transition:background .3s ease, box-shadow .3s ease;
-    pointer-events:none;
-  }
-  .orb.sun{ background:#F7CE7C; box-shadow:0 0 18px 5px rgba(247,206,124,.55); }
-  .orb.moon{ background:#EDE9F4; box-shadow:0 0 14px 4px rgba(190,180,220,.5); }
-  .ticklabels{
-    display:flex; justify-content:space-between;
-    margin-top:12px; font-size:11.5px; color:var(--muted);
-    letter-spacing:.04em;
-  }
-  .timehint{ margin-top:20px; font-size:13.5px; color:var(--muted); }
-
-  /* ── SCREEN 2: swipe deck ────────────────────────────── */
-  .deck{
-    position:relative; height:300px; margin-top:26px;
-    touch-action:none;
-  }
-  .dcard{
-    position:absolute; inset:0;
-    background:#fff;
-    border:1px solid rgba(197,160,89,0.2);
-    border-radius:12px;
-    box-shadow:0 12px 30px rgba(0,0,0,0.08);
-    display:flex; flex-direction:column; justify-content:flex-end;
-    padding:24px;
-    user-select:none; -webkit-user-select:none;
-    will-change:transform;
-    overflow:hidden;
-  }
-  .dcard::after {
-    content:''; position:absolute; inset:6px;
-    border:1px solid rgba(197,160,89,0.12);
-    border-radius:8px; pointer-events:none;
-  }
-  .dcard .band{
-    position:absolute; top:0; left:0; right:0; height:44%;
-    border-radius:12px 12px 0 0;
-    opacity: 0.85;
-  }
-  .dcard .count{
-    position:absolute; top:16px; right:18px;
-    font-size:11px; letter-spacing:.14em; color:rgba(255,255,255,.95);
-    font-weight:600;
-  }
-  .dcard h3{
-    font-family:'Cormorant Garamond',serif; font-weight:400; font-style:italic;
-    font-size:27px; line-height:1.1; position:relative;
-  }
-  .dcard p{ color:var(--muted); font-size:14.5px; margin-top:6px; position:relative; }
-  .dcard .stamp{
-    position:absolute; top:22px; left:22px;
-    font-size:13px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
-    padding:6px 12px; border:2px solid; border-radius:8px;
-    opacity:0; transform:rotate(-8deg);
-  }
-  .stamp.yes{ color:#2E7D5B; border-color:#2E7D5B; background:rgba(255,255,255,.85); }
-  .stamp.no{ color:#B0575F; border-color:#B0575F; background:rgba(255,255,255,.85); }
-  .deck-actions{
-    display:flex; justify-content:center; gap:22px; margin-top:20px;
-  }
-  .round{
-    width:50px; height:50px; border-radius:50%;
-    border:1px solid rgba(197,160,89,0.4); background:#fff;
-    font-size:18px; cursor:pointer;
-    display:flex; align-items:center; justify-content:center;
-    transition:transform .12s ease, border-color .15s ease, background .15s ease;
-    box-shadow:0 4px 12px rgba(0,0,0,0.05);
-  }
-  .round:hover{ transform:scale(1.08); }
-  .round:focus-visible{ outline:2px solid var(--gold); outline-offset:3px; }
-  .round.no{ color:var(--rose); }
-  .round.yes{ color:#2E7D5B; }
-  .round.no:hover{ border-color:var(--rose); background:#FBF1F1; }
-  .round.yes:hover{ border-color:#2E7D5B; background:#F0F7F3; }
-  .deck-hint{ text-align:center; font-size:13px; color:var(--muted); margin-top:14px; }
-  .deck-summary{ display:none; margin-top:24px; }
-  .deck-summary .pill{
-    display:inline-block; margin:0 6px 8px 0;
-    background:var(--rose-soft); color:var(--rose);
-    border:1px solid var(--rose-line); border-radius:999px;
-    padding:6px 14px; font-size:14px; font-weight:500;
-  }
-  .redo{ display:block; margin-top:10px; }
-
-  /* ── SCREEN 3: menu builder ──────────────────────────── */
-  .menu-grid{
-    display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:22px;
-  }
-  .mtile{
-    background:#fff; border:1px solid rgba(197,160,89,0.22); border-radius:6px;
-    padding:13px 14px; text-align:left;
-    font-family:'Karla',sans-serif; font-size:14.5px; font-weight:500; color:var(--ink);
-    cursor:pointer;
-    transition:border-color .15s ease, background .15s ease, transform .1s ease;
-    position:relative;
-  }
-  .mtile:hover{ border-color:var(--gold); }
-  .mtile:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
-  .mtile:active{ transform:scale(.98); }
-  .mtile[aria-pressed="true"]{
-    border-color:var(--gold); background:#F5EFE6; color:var(--ink);
-  }
-  .mtile[aria-pressed="true"]::after{
-    content:"✓"; position:absolute; right:12px; top:50%; transform:translateY(-50%);
-    font-size:13px; color:var(--gold);
-  }
-  .menucard{
-    margin-top:20px;
-    background:linear-gradient(180deg,#FFFEFB,#FAF7F2);
-    border:1px dashed var(--gold);
-    border-radius:8px;
-    padding:18px 20px;
-    min-height:92px;
-  }
-  .menucard .mc-title{
-    font-family:'Cinzel',serif;
-    font-size:11px; font-weight:600; letter-spacing:.16em; text-transform:uppercase;
-    color:var(--gold); margin-bottom:8px;
-  }
-  .menucard ul{ list-style:none; }
-  .menucard li{
-    font-family:'Cormorant Garamond',serif; font-size:18px; font-style:italic;
-    padding:3px 0;
-    display:flex; justify-content:space-between; align-items:baseline;
-    animation:lineIn .3s ease both;
-  }
-  .menucard li::after{
-    content:""; flex:1; margin:0 10px;
-    border-bottom:1px dotted var(--gold);
-    transform:translateY(-4px);
-    opacity: 0.5;
-  }
-  .menucard li i{ font-style:normal; color:var(--gold); font-size:13px; }
-  .menucard .empty{ color:var(--muted); font-size:14px; font-family:'Karla',sans-serif; }
-  @keyframes lineIn{
-    from{ opacity:0; transform:translateY(6px); }
-    to{ opacity:1; transform:none; }
-  }
-  .flydot{
-    position:fixed; z-index:50;
-    width:10px; height:10px; border-radius:50%;
-    background:var(--gold); pointer-events:none;
-  }
-
-  /* ── SCREEN 4: vibe dial ─────────────────────────────── */
-  .vibewrap{ margin-top:36px; text-align:center; }
-  .vibe-word{
-    font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:400;
-    font-size:clamp(32px,8vw,40px);
-    min-height:1.3em;
-    transition:color .4s ease;
-  }
-  .vibe-sub{ color:var(--muted); font-size:14.5px; min-height:2.6em; margin-top:6px; }
-  input[type=range].vibe{
-    -webkit-appearance:none; appearance:none;
-    width:100%; margin-top:26px;
-    height:6px; border-radius:999px;
-    background:linear-gradient(90deg, #A4B2A6 0%, #C5A059 50%, #83759F 100%);
-    outline:none;
-  }
-  input[type=range].vibe::-webkit-slider-thumb{
-    -webkit-appearance:none; appearance:none;
-    width:24px; height:24px; border-radius:50%;
-    background:#fff; border:1.5px solid var(--gold);
-    cursor:grab;
-    box-shadow:0 3px 10px rgba(0,0,0,0.15);
-  }
-  input[type=range].vibe::-moz-range-thumb{
-    width:24px; height:24px; border-radius:50%;
-    background:#fff; border:1.5px solid var(--gold);
-    cursor:grab;
-    box-shadow:0 3px 10px rgba(0,0,0,0.15);
-  }
-  input[type=range].vibe:focus-visible::-webkit-slider-thumb{
-    box-shadow:0 0 0 5px rgba(197,160,89,.3);
-  }
-  .vibe-ends{
-    display:flex; justify-content:space-between;
-    font-size:11px; letter-spacing:.12em; text-transform:uppercase;
-    color:var(--muted); margin-top:10px;
-    font-family:'Cinzel',serif;
-  }
-
-  /* ── SCREEN 5: note ──────────────────────────────────── */
-  textarea{
-    width:100%; margin-top:22px;
-    background:#fff; border:1px solid rgba(197,160,89,0.22); border-radius:6px;
-    padding:14px; font-family:'Karla',sans-serif; font-size:15px; color:var(--ink);
-    min-height:96px; resize:vertical;
-  }
-  textarea:focus{ outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(197,160,89,0.1); }
-  ::placeholder{ color:#B9B0B4; }
-
-  /* done */
-  #s-done h1{ margin-top:6px; }
-  #s-done, #s-intro {
-    text-align: center;
-  }
-  #s-done .sub, #s-intro .sub {
-    margin: 0 auto;
-  }
-  #s-intro .btn-row {
-    justify-content: center;
-  }
-
-  /* crest monogram styles */
-  .crest-wrapper {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-    margin-top: 10px;
-  }
-  .crest {
-    width: 90px;
-    height: 45px;
-    opacity: 0.95;
-  }
-</style>
+  <!-- Google Fonts: Fraunces & Overpass -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..600&family=Overpass:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/style.css?v=23">
+  
+  <!-- Supabase CDN (dormant until final prompt) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+  <div id="app-viewport" data-atmosphere="dusk">
+    <div id="viewport-bg" class="viewport-bg" aria-hidden="true"></div>
+    <div id="viewport-overlay" class="viewport-overlay" aria-hidden="true"></div>
+    
+    <!-- Single Centered Fixed-Size Card Shell -->
+    <div id="app-card">
+      
+      <!-- FIXED HEADER (78px) -->
+      <header class="card-header" id="card-header">
+        <button type="button" class="header-back-btn" id="header-back-btn" aria-label="Go to previous screen">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
 
-<div id="glow"></div>
+        <div class="header-progress-wrap" aria-hidden="true">
+          <div class="header-progress-track" id="header-progress-track">
+            <div class="header-progress-line header-progress-line--dashed"></div>
+            <div class="header-progress-line header-progress-line--solid" id="header-progress-solid"></div>
+            <div class="header-progress-car" id="header-progress-car">
+              <svg viewBox="0 0 32 32" width="18" height="18" fill="none" stroke="#24262B" stroke-width="2">
+                <path d="M 10 6 C 10 4, 22 4, 22 6 L 24 12 L 25 24 C 25 26, 23 28, 20 28 L 12 28 C 9 28, 7 26, 7 24 L 8 12 Z" fill="#F2C14E" />
+                <path d="M 11 11 C 12 9, 20 9, 21 11 L 22 15 L 10 15 Z" fill="#24262B" opacity="0.8" />
+                <circle cx="10" cy="6" r="1.5" fill="#FFFFFF" stroke="none" />
+                <circle cx="22" cy="6" r="1.5" fill="#FFFFFF" stroke="none" />
+              </svg>
+            </div>
+          </div>
+        </div>
 
-<div class="shell">
-  <div class="card">
+        <div class="header-step-count" id="header-step-count">00 / 10</div>
+      </header>
 
-    <div class="topbar">
-      <button class="back" id="backBtn" aria-label="Go back">←</button>
-      <div class="dots" id="dots" aria-hidden="true"></div>
+      <!-- SCROLLABLE BODY (flex: 1) -->
+      <main class="card-body" id="card-body">
+        <div id="stage">
+          <section class="screen-section screen-section--cover is-active" id="screen-cover" data-screen-index="0"></section>
+          <section class="screen-section screen-section--plan" id="screen-plan" data-screen-index="1"></section>
+          <section class="screen-section screen-section--suitcase" id="screen-suitcase" data-screen-index="2"></section>
+          <section class="screen-section screen-section--cooler" id="screen-cooler" data-screen-index="3"></section>
+          <section class="screen-section screen-section--vibe" id="screen-vibe" data-screen-index="4"></section>
+          <section class="screen-section screen-section--playlist" id="screen-playlist" data-screen-index="5"></section>
+          <section class="screen-section screen-section--postcards" id="screen-postcards" data-screen-index="6"></section>
+          <section class="screen-section screen-section--menu" id="screen-menu" data-screen-index="7"></section>
+          <section class="screen-section screen-section--satnight" id="screen-satnight" data-screen-index="8"></section>
+          <section class="screen-section screen-section--notes" id="screen-notes" data-screen-index="9"></section>
+          <section class="screen-section screen-section--confirmation screen-section--final" id="screen-confirmation" data-screen-index="10"></section>
+        </div>
+      </main>
+
+      <!-- FIXED FOOTER (76px) -->
+      <footer class="card-footer" id="card-footer">
+        <button type="button" class="footer-primary-btn" id="footer-primary-btn">
+          START THE CAR
+        </button>
+      </footer>
+
     </div>
-
-    <!-- 0 · INTRO -->
-    <section class="screen active" data-step="intro" id="s-intro">
-      <div class="crest-wrapper">
-        <svg class="crest" viewBox="0 0 100 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Left branch -->
-          <path d="M30 40C26 34 26 26 32 18" stroke="var(--gold)" stroke-width="1.2" stroke-linecap="round"/>
-          <path d="M28 35C24 33 22 30 23 27C24 24 27 24 29 27C31 30 30 33 28 35Z" fill="var(--gold)" opacity="0.8"/>
-          <path d="M29 26C26 23 25 20 27 18C29 16 32 17 33 20C34 23 32 26 29 26Z" fill="var(--gold)" opacity="0.8"/>
-          <!-- Right branch -->
-          <path d="M70 40C74 34 74 26 68 18" stroke="var(--gold)" stroke-width="1.2" stroke-linecap="round"/>
-          <path d="M72 35C76 33 78 30 77 27C76 24 73 24 71 27C69 30 70 33 72 35Z" fill="var(--gold)" opacity="0.8"/>
-          <path d="M71 26C74 23 75 20 73 18C71 16 68 17 67 20C66 23 68 26 71 26Z" fill="var(--gold)" opacity="0.8"/>
-          <!-- Monogram / Center dot -->
-          <circle cx="50" cy="28" r="2.5" fill="var(--gold)"/>
-          <path d="M50 15 L50 22" stroke="var(--gold)" stroke-width="0.8"/>
-          <path d="M50 34 L50 41" stroke="var(--gold)" stroke-width="0.8"/>
-        </svg>
-      </div>
-      <p class="kicker">Munich · Friday, July 24</p>
-      <h1>Let's plan our date.</h1>
-      <p class="sub">Tell me what you're in the mood for, and I'll handle the rest.</p>
-      <div class="btn-row">
-        <button class="btn" data-next>Begin</button>
-      </div>
-    </section>
-
-    <!-- 1 · TIME -->
-    <section class="screen" data-step="0" id="s-time">
-      <h2>When shall we meet?</h2>
-      <p class="sub">Adjust the timeline to show when you're available.</p>
-      <div class="timewrap">
-        <div class="timelabels">
-          <div><span>From</span><b id="tFrom">2:00 PM</b></div>
-          <div style="text-align:right"><span>Until</span><b id="tTo">11:00 PM</b></div>
-        </div>
-        <div class="track" id="track">
-          <div class="window" id="tWindow"></div>
-          <div class="orb sun" id="orb"></div>
-          <div class="handle" id="hMin" role="slider" tabindex="0" aria-label="Free from" aria-valuemin="0" aria-valuemax="28"></div>
-          <div class="handle" id="hMax" role="slider" tabindex="0" aria-label="Free until" aria-valuemin="0" aria-valuemax="28"></div>
-        </div>
-        <div class="ticklabels"><span>noon</span><span>sunset</span><span>late</span></div>
-        <p class="timehint">Choose a generous window so we don't have to rush.</p>
-      </div>
-      <div class="btn-row">
-        <button class="btn" data-next>Next</button>
-      </div>
-    </section>
-
-    <!-- 2 · ACTIVITY DECK -->
-    <section class="screen" data-step="1" id="s-deck">
-      <h2>What sounds like fun?</h2>
-      <p class="sub">Let me know which of these ideas catch your eye.</p>
-      <div class="deck" id="deck"></div>
-      <div class="deck-actions" id="deckActions">
-        <button class="round no" id="btnNo" aria-label="Skip this one">✕</button>
-        <button class="round yes" id="btnYes" aria-label="Sounds good">✓</button>
-      </div>
-      <p class="deck-hint" id="deckHint">swipe right to select or left to pass</p>
-      <div class="deck-summary" id="deckSummary">
-        <p class="sub" style="margin-bottom:12px">Your favorites so far:</p>
-        <div id="deckPills"></div>
-        <button class="skip-link redo" id="redoDeck">change my answers</button>
-        <div class="btn-row">
-          <button class="btn" data-next>Next</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3 · MENU -->
-    <section class="screen" data-step="2" id="s-menu">
-      <h2>Dinner &amp; drinks</h2>
-      <p class="sub">Tap your favorites to build our shortlist for the night.</p>
-      <div class="menu-grid" id="menuGrid"></div>
-      <div class="menucard">
-        <p class="mc-title">Our shortlist</p>
-        <ul id="menuList"><li class="empty" style="animation:none">Tap options above to add them.</li></ul>
-      </div>
-      <div class="btn-row">
-        <button class="btn" data-next>Next</button>
-        <button class="skip-link" data-next>Surprise me, skip</button>
-      </div>
-    </section>
-
-    <!-- 4 · VIBE -->
-    <section class="screen" data-step="3" id="s-vibe">
-      <h2>What vibe are we feeling?</h2>
-      <div class="vibewrap">
-        <p class="vibe-word" id="vibeWord">Classic &amp; Playful</p>
-        <p class="vibe-sub" id="vibeSub">A balance of good food, walking, and conversation.</p>
-        <input type="range" class="vibe" id="vibeRange" min="0" max="100" value="50" aria-label="Vibe, from relaxed to an adventure">
-        <div class="vibe-ends"><span>Relaxed</span><span>An Adventure</span></div>
-      </div>
-      <div class="btn-row">
-        <button class="btn" data-next>Next</button>
-      </div>
-    </section>
-
-    <!-- 5 · NOTE + SEND -->
-    <section class="screen" data-step="4" id="s-note">
-      <h2>Any final details?</h2>
-      <p class="sub">Allergies, absolute vetoes, or special requests?</p>
-      <textarea id="fNote" placeholder="Feel free to write anything here..."></textarea>
-      <div class="btn-row">
-        <button class="btn" id="sendBtn">Send Invitation</button>
-      </div>
-    </section>
-
-    <!-- DONE -->
-    <section class="screen" data-step="done" id="s-done">
-      <p class="kicker">Munich · Friday, July 24</p>
-      <h1>It's a date.</h1>
-      <p class="sub">I'll arrange all the details. See you Friday.</p>
-    </section>
-
   </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-/* ═══ CONFIG — fill in after Supabase setup ═══ */
-let SUPABASE_URL      = "YOUR_SUPABASE_URL";       // e.g. https://abcd1234.supabase.co
-let SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";  // the "anon public" key
-const TABLE             = "date_responses";
+  <!-- Application Logic Modules -->
+  <script type="module">
+    import { SCREENS } from './js/data.js?v=23';
+    import { state, loadAnswers, subscribe, setScreenIndex, markScreenCompleted, getAnswers } from './js/state.js?v=23';
+    import { init as initCover } from './js/screens/cover.js?v=23';
+    import { init as initPlan } from './js/screens/plan.js?v=23';
+    import { init as initSuitcase } from './js/screens/suitcase.js?v=23';
+    import { init as initCooler } from './js/screens/cooler.js?v=23';
+    import { init as initVibe } from './js/screens/vibe.js?v=23';
+    import { init as initPlaylist } from './js/screens/playlist.js?v=23';
+    import { init as initPostcards } from './js/screens/postcards.js?v=23';
+    import { init as initMenu } from './js/screens/menu.js?v=23';
+    import { init as initSaturdayNight } from './js/screens/saturdayNight.js?v=23';
+    import { init as initNotes } from './js/screens/notes.js?v=23';
+    import { init as initConfirmation } from './js/screens/confirmation.js?v=23';
+    import { initSupabase, saveInvitationResponse } from './js/supabase.js?v=23';
 
-// Attempt to load credentials from .env.local dynamically if running on a local server
-async function loadLocalEnv() {
-  try {
-    const response = await fetch(".env.local");
-    if (response.ok) {
-      const text = await response.text();
-      text.split("\n").forEach(line => {
-        const parts = line.split("=");
-        if (parts.length >= 2) {
-          const key = parts[0].trim();
-          const val = parts.slice(1).join("=").trim().replace(/^['"]|['"]$/g, "");
-          if ((key === "SUPABASE_URL" || key === "NEXT_PUBLIC_SUPABASE_URL") && val && !val.includes("YOUR_SUPABASE_URL")) {
-            SUPABASE_URL = val;
-          }
-          if ((key === "SUPABASE_ANON_KEY" || key === "NEXT_PUBLIC_SUPABASE_ANON_KEY" || key === "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY") && val && !val.includes("YOUR_SUPABASE_ANON_KEY")) {
-            SUPABASE_ANON_KEY = val;
-          }
+    // Expose setScreenIndex to window for helper testing
+    window.setScreenIndex = setScreenIndex;
+
+    // DOM Elements
+    const viewport = document.getElementById('app-viewport');
+    const cardBody = document.getElementById('card-body');
+    const headerBackBtn = document.getElementById('header-back-btn');
+    const headerProgressSolid = document.getElementById('header-progress-solid');
+    const headerProgressCar = document.getElementById('header-progress-car');
+    const headerStepCount = document.getElementById('header-step-count');
+    const footerPrimaryBtn = document.getElementById('footer-primary-btn');
+
+    const screenCoverEl = document.getElementById('screen-cover');
+    const screenPlanEl = document.getElementById('screen-plan');
+    const screenSuitcaseEl = document.getElementById('screen-suitcase');
+    const screenCoolerEl = document.getElementById('screen-cooler');
+    const screenVibeEl = document.getElementById('screen-vibe');
+    const screenPlaylistEl = document.getElementById('screen-playlist');
+    const screenPostcardsEl = document.getElementById('screen-postcards');
+    const screenMenuEl = document.getElementById('screen-menu');
+    const screenSatnightEl = document.getElementById('screen-satnight');
+    const screenNotesEl = document.getElementById('screen-notes');
+    const screenConfirmationEl = document.getElementById('screen-confirmation');
+
+    let lastRenderedIndex = -1;
+
+    // Update Header Progress & Chrome
+    function updateHeaderChrome() {
+      const index = state.currentScreenIndex;
+      
+      const imgUrl = `url('assets/${index}.jpeg')`;
+
+      // Update background image for current screen index
+      const viewportBg = document.getElementById('viewport-bg');
+      if (viewportBg) {
+        viewportBg.style.backgroundImage = imgUrl;
+      }
+
+      const appCard = document.getElementById('app-card');
+      if (appCard) {
+        appCard.style.backgroundImage = `linear-gradient(rgba(239, 230, 210, 0.78), rgba(239, 230, 210, 0.78)), ${imgUrl}`;
+        appCard.style.backgroundSize = 'cover';
+        appCard.style.backgroundPosition = 'center';
+      }
+
+      // Step Count label ("00 / 10", "04 / 10", etc.)
+      const stepStr = String(index).padStart(2, '0');
+      headerStepCount.textContent = `${stepStr} / 10`;
+
+      // Progress car math (0% to 100%)
+      const pct = Math.min(Math.max((index / 10) * 100, 0), 100);
+      headerProgressSolid.style.width = `${pct}%`;
+      headerProgressCar.style.left = `${pct}%`;
+
+      // Back button visibility
+      if (index === 0) {
+        headerBackBtn.classList.add('is-hidden');
+        headerBackBtn.disabled = true;
+      } else {
+        headerBackBtn.classList.remove('is-hidden');
+        headerBackBtn.disabled = false;
+      }
+
+      // Update active atmosphere glow
+      const currentAtmosphere = SCREENS[index]?.atmosphere || 'dusk';
+      viewport.setAttribute('data-atmosphere', currentAtmosphere);
+
+      // Primary Button Label in Footer
+      if (index === 0) {
+        footerPrimaryBtn.textContent = "Start";
+      } else if (index === 9) {
+        footerPrimaryBtn.textContent = "Send it";
+      } else if (index === 10) {
+        footerPrimaryBtn.textContent = "Start over";
+      } else {
+        footerPrimaryBtn.textContent = "Next";
+      }
+
+      // Scroll card body back to top on screen change
+      if (cardBody) cardBody.scrollTop = 0;
+    }
+
+    // Handle Screen Swapping
+    function renderScreen() {
+      const index = state.currentScreenIndex;
+      lastRenderedIndex = index;
+      
+      const sections = document.querySelectorAll('.screen-section');
+      sections.forEach(s => s.classList.remove('is-active'));
+
+      if (index === 0) {
+        initCover(screenCoverEl, () => setScreenIndex(1));
+        screenCoverEl.classList.add('is-active');
+      } else if (index === 1) {
+        initPlan(screenPlanEl);
+        screenPlanEl.classList.add('is-active');
+      } else if (index === 2) {
+        initSuitcase(screenSuitcaseEl);
+        screenSuitcaseEl.classList.add('is-active');
+      } else if (index === 3) {
+        initCooler(screenCoolerEl);
+        screenCoolerEl.classList.add('is-active');
+      } else if (index === 4) {
+        initVibe(screenVibeEl);
+        screenVibeEl.classList.add('is-active');
+      } else if (index === 5) {
+        initPlaylist(screenPlaylistEl);
+        screenPlaylistEl.classList.add('is-active');
+      } else if (index === 6) {
+        initPostcards(screenPostcardsEl);
+        screenPostcardsEl.classList.add('is-active');
+      } else if (index === 7) {
+        initMenu(screenMenuEl);
+        screenMenuEl.classList.add('is-active');
+      } else if (index === 8) {
+        initSaturdayNight(screenSatnightEl);
+        screenSatnightEl.classList.add('is-active');
+      } else if (index === 9) {
+        initNotes(screenNotesEl);
+        screenNotesEl.classList.add('is-active');
+      } else if (index === 10) {
+        initConfirmation(screenConfirmationEl);
+        screenConfirmationEl.classList.add('is-active');
+      }
+
+      updateHeaderChrome();
+    }
+
+    // Event Listeners for Header & Footer Nav Buttons
+    headerBackBtn.addEventListener('click', () => {
+      if (state.currentScreenIndex > 0) {
+        setScreenIndex(state.currentScreenIndex - 1);
+      }
+    });
+
+    footerPrimaryBtn.addEventListener('click', async () => {
+      if (state.currentScreenIndex === 10) {
+        setScreenIndex(0);
+        return;
+      }
+      if (state.currentScreenIndex === 9) {
+        try {
+          await saveInvitationResponse(getAnswers());
+        } catch (err) {
+          console.warn('Supabase save error:', err);
+        }
+      }
+      markScreenCompleted(state.currentScreenIndex);
+      if (state.currentScreenIndex < SCREENS.length - 1) {
+        setScreenIndex(state.currentScreenIndex + 1);
+      }
+    });
+
+    // Boot App
+    function boot() {
+      // Preload background images (0.jpeg to 10.jpeg)
+      for (let i = 0; i <= 10; i++) {
+        const img = new Image();
+        img.src = `assets/${i}.jpeg`;
+      }
+
+      initSupabase();
+      loadAnswers();
+      renderScreen();
+
+      subscribe((currState, changeType) => {
+        if (changeType === 'navigation' || state.currentScreenIndex !== lastRenderedIndex) {
+          renderScreen();
+        } else {
+          updateHeaderChrome();
         }
       });
     }
-  } catch (e) {
-    // Fail silently when not hosted on a server that serves file structure
-  }
-}
-loadLocalEnv();
 
-const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-const $ = id => document.getElementById(id);
-
-/* ═══ Screen flow ═══ */
-const ORDER = ["s-intro","s-time","s-deck","s-menu","s-vibe","s-note","s-done"];
-let current = 0;
-const dotsEl = $("dots");
-for(let i=0;i<5;i++){ dotsEl.appendChild(document.createElement("i")); }
-
-function go(i){
-  current = i;
-  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-  $(ORDER[i]).classList.add("active");
-  // dots reflect steps 1..5 (indices 1..5)
-  [...dotsEl.children].forEach((d,di)=>{
-    d.className = "";
-    if(i>=1 && i<=5){
-      if(di < i-1) d.className = "done";
-      if(di === i-1) d.className = "on";
-    } else if(i===6){ d.className = "done"; }
-  });
-  $("backBtn").classList.toggle("show", i>=1 && i<=5);
-  if(ORDER[i]==="s-deck") refreshDeckView();
-}
-document.querySelectorAll("[data-next]").forEach(b=>{
-  b.addEventListener("click", ()=> go(Math.min(current+1, ORDER.length-1)));
-});
-$("backBtn").addEventListener("click", ()=> go(Math.max(current-1, 0)));
-
-/* ═══ 1 · Time range slider ═══
-   values are half-hours after 12:00 noon, 0..28 (12 PM → 2 AM) */
-const T_MAX = 28, T_GAP = 2;
-let tMin = 4, tMax = 22; // defaults: 2 PM – 11 PM
-const track = $("track"), win = $("tWindow"), hMin = $("hMin"), hMax = $("hMax"), orb = $("orb");
-
-function fmtT(v){
-  const mins = (12*60 + v*30) % 1440;
-  const h24 = Math.floor(mins/60), mm = mins%60;
-  const h12 = h24%12 === 0 ? 12 : h24%12;
-  const ap = h24 < 12 ? "AM" : "PM";
-  return `${h12}:${String(mm).padStart(2,"0")} ${ap}`;
-}
-function renderTime(activeHandle){
-  const pMin = tMin/T_MAX*100, pMax = tMax/T_MAX*100;
-  win.style.left = pMin + "%";
-  win.style.width = (pMax - pMin) + "%";
-  hMin.style.left = pMin + "%";
-  hMax.style.left = pMax + "%";
-  hMin.setAttribute("aria-valuenow", tMin);
-  hMin.setAttribute("aria-valuetext", fmtT(tMin));
-  hMax.setAttribute("aria-valuenow", tMax);
-  hMax.setAttribute("aria-valuetext", fmtT(tMax));
-  $("tFrom").textContent = fmtT(tMin);
-  $("tTo").textContent = fmtT(tMax);
-  // sun/moon follows whichever handle moved last (default: end time)
-  const v = activeHandle === hMin ? tMin : tMax;
-  orb.style.left = (v/T_MAX*100) + "%";
-  orb.className = "orb " + (v <= 16 ? "sun" : "moon"); // 8 PM cutover
-}
-function valFromX(clientX){
-  const r = track.getBoundingClientRect();
-  const p = Math.min(1, Math.max(0, (clientX - r.left) / r.width));
-  return Math.round(p * T_MAX);
-}
-let dragging = null;
-function startDrag(handle, e){
-  dragging = handle;
-  handle.setPointerCapture && e.pointerId !== undefined && handle.setPointerCapture(e.pointerId);
-}
-[hMin, hMax].forEach(h=>{
-  h.addEventListener("pointerdown", e=>{ e.preventDefault(); startDrag(h, e); });
-  h.addEventListener("keydown", e=>{
-    const d = e.key === "ArrowRight" || e.key === "ArrowUp" ? 1 :
-              e.key === "ArrowLeft" || e.key === "ArrowDown" ? -1 : 0;
-    if(!d) return;
-    e.preventDefault();
-    if(h === hMin) tMin = Math.min(Math.max(0, tMin + d), tMax - T_GAP);
-    else tMax = Math.max(Math.min(T_MAX, tMax + d), tMin + T_GAP);
-    renderTime(h);
-  });
-});
-track.addEventListener("pointerdown", e=>{
-  if(e.target === hMin || e.target === hMax) return;
-  const v = valFromX(e.clientX);
-  const handle = Math.abs(v - tMin) <= Math.abs(v - tMax) ? hMin : hMax;
-  if(handle === hMin) tMin = Math.min(v, tMax - T_GAP);
-  else tMax = Math.max(v, tMin + T_GAP);
-  renderTime(handle);
-  startDrag(handle, e);
-});
-window.addEventListener("pointermove", e=>{
-  if(!dragging) return;
-  const v = valFromX(e.clientX);
-  if(dragging === hMin) tMin = Math.min(Math.max(0, v), tMax - T_GAP);
-  else tMax = Math.max(Math.min(T_MAX, v), tMin + T_GAP);
-  renderTime(dragging);
-});
-window.addEventListener("pointerup", ()=> dragging = null);
-renderTime(hMax);
-
-/* ═══ 2 · Activity swipe deck ═══ */
-const ACTIVITIES = [
-  { t:"Art & culture",      d:"A quiet hour wandering through galleries or museums.",           band:"linear-gradient(135deg,#C5A059,#8E7DA8)" },
-  { t:"Outdoor strolls",    d:"Finding a sunny patch of grass or a walk through the gardens.",    band:"linear-gradient(135deg,#B9CBAA,#7E9B77)" },
-  { t:"Exploring the city", d:"Wandering down quiet streets and discovering hidden spots.",      band:"linear-gradient(135deg,#E8C9A8,#C79A6E)" },
-  { t:"By the water",       d:"Sitting near the lake or taking a peaceful walk along the canal.",  band:"linear-gradient(135deg,#A8C5D6,#6E93AC)" },
-  { t:"Local markets",      d:"Browsing nearby artisan shops or local food stalls.",           band:"linear-gradient(135deg,#E3B1A8,#C77E74)" },
-  { t:"Something active",   d:"Doing something light and playful outside in the fresh air.",     band:"linear-gradient(135deg,#D6C5A8,#A8946E)" },
-  { t:"Live music",         d:"Finding a cozy local lounge with acoustic sessions.",             band:"linear-gradient(135deg,#B1A8D6,#7A6EA8)" },
-  { t:"A complete surprise",d:"Leave all the details in my hands.",                              band:"linear-gradient(135deg,#D6A8C0,#A86E8F)" }
-];
-let deckIndex = 0;
-const liked = [], passed = [];
-const deckEl = $("deck");
-
-function buildDeck(){
-  deckEl.innerHTML = "";
-  // render up to 3 upcoming cards, last in DOM = top of stack
-  const upcoming = ACTIVITIES.slice(deckIndex, deckIndex + 3);
-  for(let i = upcoming.length - 1; i >= 0; i--){
-    const a = upcoming[i];
-    const idx = deckIndex + i;
-    const c = document.createElement("div");
-    c.className = "dcard";
-    c.dataset.idx = idx;
-    const depth = i; // 0 = top
-    c.style.transform = `translateY(${depth*10}px) scale(${1 - depth*0.035})`;
-    c.style.zIndex = 10 - depth;
-    c.innerHTML = `
-      <div class="band" style="background:${a.band}"></div>
-      <span class="count">${idx+1} / ${ACTIVITIES.length}</span>
-      <span class="stamp yes">Sounds good</span>
-      <span class="stamp no">Skip</span>
-      <h3>${a.t}</h3>
-      <p>${a.d}</p>`;
-    deckEl.appendChild(c);
-    if(depth === 0) attachDrag(c);
-  }
-  if(upcoming.length === 0) finishDeck();
-}
-
-function attachDrag(card){
-  let sx=0, sy=0, dx=0, dy=0, active=false;
-  const yes = card.querySelector(".stamp.yes");
-  const no  = card.querySelector(".stamp.no");
-  card.addEventListener("pointerdown", e=>{
-    active = true; sx = e.clientX; sy = e.clientY;
-    card.setPointerCapture(e.pointerId);
-    card.style.transition = "none";
-  });
-  card.addEventListener("pointermove", e=>{
-    if(!active) return;
-    dx = e.clientX - sx; dy = e.clientY - sy;
-    card.style.transform = `translate(${dx}px, ${dy*0.4}px) rotate(${dx*0.06}deg)`;
-    yes.style.opacity = Math.max(0, Math.min(1, dx/90));
-    no.style.opacity  = Math.max(0, Math.min(1, -dx/90));
-  });
-  const release = ()=>{
-    if(!active) return;
-    active = false;
-    if(dx > 110) commit(card, true);
-    else if(dx < -110) commit(card, false);
-    else{
-      card.style.transition = "transform .35s cubic-bezier(.2,.9,.3,1.2)";
-      card.style.transform = "";
-      yes.style.opacity = 0; no.style.opacity = 0;
-    }
-    dx = 0; dy = 0;
-  };
-  card.addEventListener("pointerup", release);
-  card.addEventListener("pointercancel", release);
-}
-
-function commit(card, isYes){
-  if(card.dataset.done) return;   // ignore double-swipes mid-animation
-  card.dataset.done = "1";
-  const a = ACTIVITIES[+card.dataset.idx];
-  (isYes ? liked : passed).push(a.t);
-  const flyX = isYes ? 520 : -520;
-  if(reduceMotion){
-    deckIndex++; buildDeck();
-  } else {
-    card.style.transition = "transform .4s ease, opacity .4s ease";
-    card.style.transform = `translate(${flyX}px, -30px) rotate(${isYes?18:-18}deg)`;
-    card.style.opacity = "0";
-    setTimeout(()=>{ deckIndex++; buildDeck(); }, 260);
-  }
-}
-
-function topCard(){ return deckEl.querySelector(`.dcard[data-idx="${deckIndex}"]`); }
-$("btnYes").addEventListener("click", ()=>{ const c = topCard(); if(c) commit(c, true); });
-$("btnNo").addEventListener("click",  ()=>{ const c = topCard(); if(c) commit(c, false); });
-document.addEventListener("keydown", e=>{
-  if(ORDER[current] !== "s-deck" || deckIndex >= ACTIVITIES.length) return;
-  if(e.key === "ArrowRight"){ const c = topCard(); if(c) commit(c, true); }
-  if(e.key === "ArrowLeft"){  const c = topCard(); if(c) commit(c, false); }
-});
-
-function finishDeck(){
-  $("deck").style.display = "none";
-  $("deckActions").style.display = "none";
-  $("deckHint").style.display = "none";
-  const pills = $("deckPills");
-  pills.innerHTML = liked.length
-    ? liked.map(t=>`<span class="pill">${t}</span>`).join("")
-    : `<span class="sub" style="font-style: italic;">No selections made — I'll plan a nice surprise.</span>`;
-  $("deckSummary").style.display = "block";
-}
-function refreshDeckView(){
-  const done = deckIndex >= ACTIVITIES.length;
-  $("deck").style.display = done ? "none" : "block";
-  $("deckActions").style.display = done ? "none" : "flex";
-  $("deckHint").style.display = done ? "none" : "block";
-  $("deckSummary").style.display = done ? "block" : "none";
-}
-$("redoDeck").addEventListener("click", ()=>{
-  deckIndex = 0; liked.length = 0; passed.length = 0;
-  refreshDeckView(); buildDeck();
-});
-buildDeck();
-
-/* ═══ 3 · Menu builder ═══ */
-const MENU = ["Bavarian Classics","Italian Cuisine","Asian Fusion","Fine Dining","Casual Dining",
-              "Craft Cocktails","Wine Tasting","Beer Garden","Coffee & Dessert","Surprise Me"];
-const chosenFood = new Set();
-const grid = $("menuGrid"), list = $("menuList");
-
-MENU.forEach(item=>{
-  const b = document.createElement("button");
-  b.className = "mtile";
-  b.setAttribute("aria-pressed","false");
-  b.textContent = item;
-  b.addEventListener("click", ()=>{
-    const on = b.getAttribute("aria-pressed") === "true";
-    b.setAttribute("aria-pressed", String(!on));
-    if(on) chosenFood.delete(item); else { chosenFood.add(item); flyToMenu(b); }
-    renderMenu();
-  });
-  grid.appendChild(b);
-});
-function renderMenu(){
-  list.innerHTML = "";
-  if(chosenFood.size === 0){
-    list.innerHTML = `<li class="empty" style="animation:none">Nothing yet — tap above.</li>`;
-    return;
-  }
-  chosenFood.forEach(item=>{
-    const li = document.createElement("li");
-    li.innerHTML = `${item}<i>✓</i>`;
-    list.appendChild(li);
-  });
-}
-function flyToMenu(fromEl){
-  if(reduceMotion) return;
-  const a = fromEl.getBoundingClientRect();
-  const b = list.getBoundingClientRect();
-  const dot = document.createElement("div");
-  dot.className = "flydot";
-  dot.style.left = (a.left + a.width/2) + "px";
-  dot.style.top = (a.top + a.height/2) + "px";
-  document.body.appendChild(dot);
-  const dx = (b.left + 24) - (a.left + a.width/2);
-  const dy = (b.top + b.height/2) - (a.top + a.height/2);
-  dot.animate(
-    [{ transform:"translate(0,0) scale(1)", opacity:1 },
-     { transform:`translate(${dx}px,${dy}px) scale(.4)`, opacity:0 }],
-    { duration:450, easing:"cubic-bezier(.3,.7,.4,1)" }
-  ).onfinish = ()=> dot.remove();
-}
-
-/* ═══ 4 · Vibe dial ═══ */
-const VIBES = [
-  { max:33,  word:"Relaxed & Cozy",      sub:"A relaxed pace and good conversation.",        glow:"rgba(95,125,102,0.18)", color:"#5F7D66" },
-  { max:66,  word:"Classic & Playful",   sub:"A balance of good food, walking, and chatting.", glow:"rgba(168,98,108,0.18)", color:"#A8626C" },
-  { max:100, word:"An Adventure",        sub:"A full itinerary with plenty to see and do.",  glow:"rgba(107,91,149,0.18)", color:"#6B5B95" }
-];
-const vibeRange = $("vibeRange");
-function vibeZone(v){ return VIBES.find(z => v <= z.max); }
-function renderVibe(){
-  const z = vibeZone(+vibeRange.value);
-  $("vibeWord").textContent = z.word;
-  $("vibeWord").style.color = z.color;
-  $("vibeSub").textContent = z.sub;
-  document.documentElement.style.setProperty("--glow-c", z.glow);
-  $("glow").style.background =
-    `radial-gradient(70% 55% at 50% 15%, ${z.glow} 0%, transparent 80%),` +
-    `linear-gradient(180deg,#241E1C 0%, var(--bg) 80%)`;
-}
-vibeRange.addEventListener("input", renderVibe);
-renderVibe();
-
-/* ═══ 5 · Send ═══ */
-$("sendBtn").addEventListener("click", async ()=>{
-  const btn = $("sendBtn");
-  btn.disabled = true; btn.textContent = "Sending…";
-  const payload = {
-    availability: { from: fmtT(tMin), until: fmtT(tMax) },
-    activities: liked.slice(),
-    activities_passed: passed.slice(),
-    food_drinks: [...chosenFood],
-    vibe: vibeZone(+vibeRange.value).word,
-    vibe_score: +vibeRange.value,
-    note: $("fNote").value.trim() || null
-  };
-  const configured = SUPABASE_URL.startsWith("https://") && !SUPABASE_ANON_KEY.startsWith("YOUR_");
-  if(configured){
-    try{
-      const { createClient } = supabase;
-      const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      const { error } = await supabaseClient
-        .from(TABLE)
-        .insert([payload]);
-      
-      if (error) {
-        console.error("Supabase Insertion Error:", error);
-      }
-    }catch(e){ 
-      console.error("Connection Error:", e);
-    }
-  }
-  go(ORDER.indexOf("s-done"));
-});
-</script>
+    document.addEventListener('DOMContentLoaded', boot);
+  </script>
 </body>
 </html>
